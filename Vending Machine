@@ -1,0 +1,84 @@
+# Maxine's Vending Machine - Summative Assessment 2
+
+# Define items available in the vending machine
+items = {
+    "111": {"name": "Lay's Classic Chips", "price": 10, "stock": 3, "type": "snack"},
+    "222": {"name": "Cheetos Puffs", "price": 9, "stock": 5, "type": "snack"},
+    "333": {"name": "Ruffle's Sour Cream & Onion", "price": 20, "stock": 5, "type": "snack"},
+    "444": {"name": "Lipton Peach Iced Tea", "price": 5, "stock": 1, "type": "drink"},
+    "555": {"name": "Nescafe Spanish Latte", "price": 6, "stock": 0, "type": "drink"},
+    "666": {"name": "Oasis Bottled Water", "price": 2, "stock": 1, "type": "drink"},
+    "777": {"name": "Peanut M&M's", "price": 6, "stock": 2, "type": "snack"},
+    "888": {"name": "Reese's Cups", "price": 5, "stock": 4, "type": "snack"},
+    "999": {"name": "Hershey's Milk Chocolate", "price": 5, "stock": 0, "type": "snack"},
+}
+
+def vending_machine():
+    while True:  # Outer loop for repeated purchases
+        # Print the vending machine menu once at the start
+        print('''
+               Maxine's Vending Machine
+───────────────────────────୨ৎ───────────────────────────
+Code:   Items:                        Price:     Stock:   
+111     Lay's Classic Chips           AED 10       3
+222     Cheetos Puffs                 AED 9        5
+333     Ruffle's Sour Cream & Onion   AED 20       5
+444     Lipton Peach Iced Tea         AED 5        1
+555     Nescafe Spanish Latte         AED 6        0
+666     Oasis Bottled Water           AED 2        1
+777     Peanut M&M's                  AED 6        2
+888     Reese's Cups                  AED 5        4
+999     Hershey's Milk Chocolate      AED 5        0
+────────────────────────────────────────────────────────     
+             ''')
+
+        # Step 1: Insert money
+        try:
+            money = float(input("Insert money (AED): "))
+        except ValueError:
+            print("Please enter a valid amount.")
+            continue  # Restart inserting money if invalid
+
+        while True:  # Inner loop for selecting items
+            choice = input("Pick your desired snack or drink by code: ")
+
+            # Step 2: Check if code is valid
+            if choice not in items:
+                print("Invalid selection. Please choose a valid item.")
+                continue
+
+            # Step 3: Check if item is in stock
+            if items[choice]["stock"] <= 0:
+                print("The item you've chosen is unavailable.")
+                continue
+
+            item_price = items[choice]["price"]
+
+            # Step 4: Check if enough money
+            if money < item_price:
+                print(f"Not enough money. {items[choice]['name']} costs AED {item_price}.")
+                break  # Go back to insert more money
+
+            # Step 5: Dispense item
+            if items[choice]["type"] == "drink":
+                print(f"Your drink '{items[choice]['name']}' has been dispensed.")
+            else:
+                print(f"Your snack '{items[choice]['name']}' has been dispensed.")
+
+            # Step 6: Update stock
+            items[choice]["stock"] -= 1
+
+            # Step 7: Calculate change
+            change = money - item_price
+            print(f"Your change is AED {change:.2f}")
+
+            # Step 8: Ask if user wants to buy more
+            again = input("Would you like to purchase anything else? (yes/no): ").strip().lower()
+            if again != "yes":
+                print("Thank you for using Maxine's Vending Machine!")
+                return  # Exit program
+            else:
+                break  # Restart from inserting money
+
+# Run the vending machine
+vending_machine()
